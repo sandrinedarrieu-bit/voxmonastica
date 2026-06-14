@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vox Monastica — Conseiller de produits monastiques</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css" />
+  <style>
+    :root {
+      --bg: #f9f6f1;
+      --surface: #ffffff;
+      --border: #e3ddd2;
+      --border-strong: #c9bfae;
+      --text: #2c2c2a;
+      --text-secondary: #6f6a60;
+      --accent: #6f4e37;
+      --accent-bg: #f1e7da;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    header h1 {
+      font-size: 24px;
+      font-weight: 500;
+      margin: 0 0 8px;
+    }
+    header p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .intro-card {
+      background: var(--accent-bg);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 14px;
+    }
+    .intro-card strong { font-weight: 500; }
+    .question {
+      margin-bottom: 1.5rem;
+    }
+    .question p {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0 0 8px;
+    }
+    .options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+    }
+    .opt {
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .opt:hover {
+      border-color: var(--border-strong);
+    }
+    .opt.selected {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      font-family: inherit;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    button#submitBtn {
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    button#submitBtn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    button#submitBtn:not(:disabled):hover {
+      opacity: 0.9;
+    }
+    #loading {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    #error {
+      display: none;
+      font-size: 14px;
+      color: #a32d2d;
+      background: #fcebeb;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+    }
+    #results {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    #results .results-intro {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .card-header p {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .card-price {
+      font-size: 15px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .card-monastere {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .card-raison {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin: 0;
+    }
+    button#restartBtn {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    button#restartBtn:hover {
+      border-color: var(--border-strong);
+    }
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="ti ti-sparkles"></i> Vox Monastica</h1>
+      <p>Conseiller de produits d'artisanat monastique</p>
+    </header>
+
+    <div class="intro-card">
+      Prototype de démonstration : un questionnaire de critères, et une IA qui sélectionne
+      et justifie ses recommandations à partir d'un échantillon de catalogue.
+      <strong>Ceci est une démo non commerciale.</strong>
+    </div>
+
+    <div id="questions">
+      <div class="question">
+        <p>1. Pour quelle occasion ?</p>
+        <div class="options">
+          <button class="opt" data-group="occasion" data-value="cadeau">Cadeau</button>
+          <button class="opt" data-group="occasion" data-value="priere">Usage personnel / prière</button>
+          <button class="opt" data-group="occasion" data-value="maison">Maison / quotidien</button>
+          <button class="opt" data-group="occasion" data-value="gourmand">Plaisir gourmand</button>
+        </div>
+      </div>
+
+      <div class="question">
+        <p>2. Quel type de produit ?</p>
+        <div class="options">
+          <button class="opt" data-group="type" data-value="epicerie">Épicerie / gourmand</button>
+          <button class="opt" data-group="type" data-value="bienetre">Bien-être / soins</button>
+          <button class="opt" data-group="type" data-value="priere">Objets de prière / art religieux</button>
+          <button class="opt" data-group="type" data-value="maison">Entretien maison</button>
+        </div>
+      </div>
+
+      <div class="question">
+        <p>3. Budget</p>
+        <div class="options">
+          <button class="opt" data-group="budget" data-value="petit">Moins de 15 €</button>
+          <button class="opt" data-group="budget" data-value="moyen">15 € à 40 €</button>
+          <button class="opt" data-group="budget" data-value="grand">Plus de 40 €</button>
+        </div>
+      </div>
+
+      <div class="question">
+        <p>4. Une sensibilité particulière ?</p>
+        <div class="options">
+          <button class="opt" data-group="sensibilite" data-value="naturel">Produits naturels / bio</button>
+          <button class="opt" data-group="sensibilite" data-value="tradition">Tradition / savoir-faire ancien</button>
+          <button class="opt" data-group="sensibilite" data-value="normandie">Origine Normandie</button>
+          <button class="opt" data-group="sensibilite" data-value="aucune">Pas de préférence</button>
+        </div>
+      </div>
+
+      <div class="question">
+        <p>5. Un mot sur le destinataire ou le contexte (facultatif)</p>
+        <input type="text" id="freeText" placeholder="ex : pour ma grand-mère, très croyante, qui aime jardiner" />
+      </div>
+    </div>
+
+    <button id="submitBtn" disabled>
+      <i class="ti ti-wand"></i> Voir mes recommandations
+    </button>
+
+    <div id="error"></div>
+    <div id="loading"><i class="ti ti-loader-2"></i> Le conseiller analyse le catalogue et rédige ses recommandations...</div>
+    <div id="results"></div>
+
+    <footer>Démo technique — catalogue échantillon, sans lien avec une boutique réelle</footer>
+  </div>
+
+  <script>
+    const state = { occasion: null, type: null, budget: null, sensibilite: null };
+
+    document.querySelectorAll(".opt").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const group = btn.dataset.group;
+        document.querySelectorAll('.opt[data-group="' + group + '"]').forEach((b) => {
+          b.classList.remove("selected");
+        });
+        btn.classList.add("selected");
+        state[group] = btn.dataset.value;
+        checkReady();
+      });
+    });
+
+    function checkReady() {
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = !Object.values(state).every((v) => v !== null);
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+      const questions = document.getElementById("questions");
+      const submitBtn = document.getElementById("submitBtn");
+      const loading = document.getElementById("loading");
+      const error = document.getElementById("error");
+      const results = document.getElementById("results");
+
+      questions.style.display = "none";
+      submitBtn.style.display = "none";
+      error.style.display = "none";
+      results.style.display = "none";
+      loading.style.display = "block";
+
+      const freeText = document.getElementById("freeText").value.trim();
+
+      try {
+        const response = await fetch("/api/recommend", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...state, freeText }),
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || "Erreur lors de la requête");
+        }
+
+        const data = await response.json();
+        renderResults(data.recommandations || []);
+        loading.style.display = "none";
+        results.style.display = "flex";
+      } catch (err) {
+        loading.style.display = "none";
+        error.style.display = "block";
+        error.textContent = "Une erreur est survenue : " + err.message;
+        submitBtn.style.display = "block";
+      }
+    });
+
+    function renderResults(recos) {
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+
+      const intro = document.createElement("p");
+      intro.className = "results-intro";
+      intro.textContent = "Voici les recommandations du conseiller IA :";
+      results.appendChild(intro);
+
+      recos.forEach((p) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML =
+          '<div class="card-header">' +
+            "<p>" + escapeHtml(p.name) + "</p>" +
+            '<span class="card-price">' + p.prix.toFixed(2).replace(".", ",") + " €</span>" +
+          "</div>" +
+          '<div class="card-monastere"><i class="ti ti-building-church"></i><span>' + escapeHtml(p.monastere) + "</span></div>" +
+          '<p class="card-raison">' + escapeHtml(p.raison || "") + "</p>";
+        results.appendChild(card);
+      });
+
+      const restart = document.createElement("button");
+      restart.id = "restartBtn";
+      restart.innerHTML = '<i class="ti ti-refresh"></i> Refaire une recherche';
+      restart.addEventListener("click", () => window.location.reload());
+      results.appendChild(restart);
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
