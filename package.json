@@ -1,0 +1,9 @@
+{
+  "name": "vox-monastica-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Démo : conseiller IA pour produits d'artisanat monastique",
+  "scripts": {
+    "dev": "vercel dev"
+  }
+}
