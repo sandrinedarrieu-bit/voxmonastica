@@ -31,7 +31,7 @@
     }
     header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     header h1 {
       font-size: 24px;
@@ -51,6 +51,33 @@
       font-size: 14px;
     }
     .intro-card strong { font-weight: 500; }
+
+    /* Mode selector */
+    .mode-selector {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .mode-btn {
+      padding: 12px 8px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .mode-btn:hover { border-color: var(--border-strong); }
+    .mode-btn.selected {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+    }
+    .mode-btn i { display: block; font-size: 22px; margin-bottom: 6px; }
+
+    /* Form mode */
     .question {
       margin-bottom: 1.5rem;
     }
@@ -74,9 +101,7 @@
       text-align: left;
       transition: border-color 0.15s, background 0.15s;
     }
-    .opt:hover {
-      border-color: var(--border-strong);
-    }
+    .opt:hover { border-color: var(--border-strong); }
     .opt.selected {
       border-color: var(--accent);
       background: var(--accent-bg);
@@ -106,17 +131,84 @@
       cursor: pointer;
       transition: opacity 0.15s;
     }
-    button#submitBtn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+    button#submitBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+    button#submitBtn:not(:disabled):hover { opacity: 0.9; }
+
+    /* Chat mode */
+    #chatPanel, #avatarPanel { display: none; flex-direction: column; gap: 1rem; }
+    #chatLog, #avatarLog {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 1rem;
     }
-    button#submitBtn:not(:disabled):hover {
-      opacity: 0.9;
+    .bubble {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
     }
+    .bubble.assistant {
+      align-self: flex-start;
+      background: var(--accent-bg);
+      border-bottom-left-radius: 4px;
+    }
+    .bubble.user {
+      align-self: flex-end;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom-right-radius: 4px;
+    }
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .chat-input-row input[type="text"] { flex: 1; }
+    .chat-input-row button {
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+    }
+    .chat-input-row button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .chat-input-row button.mic-active {
+      background: #a32d2d;
+    }
+
+    /* Avatar */
+    .avatar-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.5rem 0 0.5rem;
+    }
+    .avatar-status {
+      font-size: 13px;
+      color: var(--text-secondary);
+      min-height: 18px;
+      text-align: center;
+    }
+    .voice-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .voice-toggle input { cursor: pointer; }
+
+    /* Shared */
     #loading {
       display: none;
       text-align: center;
-      padding: 2rem 0;
+      padding: 1.5rem 0;
       font-size: 14px;
       color: var(--text-secondary);
     }
@@ -133,6 +225,7 @@
       display: none;
       flex-direction: column;
       gap: 1rem;
+      margin-top: 1rem;
     }
     #results .results-intro {
       font-size: 14px;
@@ -152,16 +245,8 @@
       gap: 8px;
       margin-bottom: 6px;
     }
-    .card-header p {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 500;
-    }
-    .card-price {
-      font-size: 15px;
-      font-weight: 500;
-      white-space: nowrap;
-    }
+    .card-header p { margin: 0; font-size: 15px; font-weight: 500; }
+    .card-price { font-size: 15px; font-weight: 500; white-space: nowrap; }
     .card-monastere {
       display: flex;
       align-items: center;
@@ -170,12 +255,7 @@
       color: var(--text-secondary);
       margin-bottom: 8px;
     }
-    .card-raison {
-      font-size: 14px;
-      color: var(--text-secondary);
-      font-style: italic;
-      margin: 0;
-    }
+    .card-raison { font-size: 14px; color: var(--text-secondary); font-style: italic; margin: 0; }
     button#restartBtn {
       width: 100%;
       padding: 10px;
@@ -187,15 +267,27 @@
       cursor: pointer;
       margin-top: 0.5rem;
     }
-    button#restartBtn:hover {
-      border-color: var(--border-strong);
-    }
+    button#restartBtn:hover { border-color: var(--border-strong); }
     footer {
       text-align: center;
       font-size: 12px;
       color: var(--text-secondary);
       margin-top: 3rem;
     }
+
+    /* Avatar animation */
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    @keyframes glow {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
+    .avatar-breathe { animation: breathe 4s ease-in-out infinite; }
+    .avatar-breathe.speaking { animation: breathe 1.1s ease-in-out infinite; }
+    .avatar-flame { animation: glow 2.5s ease-in-out infinite; }
+    .avatar-flame.speaking { animation: glow 0.5s ease-in-out infinite; }
   </style>
 </head>
 <body>
@@ -206,77 +298,155 @@
     </header>
 
     <div class="intro-card">
-      Prototype de démonstration : un questionnaire de critères, et une IA qui sélectionne
-      et justifie ses recommandations à partir d'un échantillon de catalogue.
+      Prototype de démonstration : un conseiller IA qui sélectionne et justifie
+      ses recommandations à partir d'un échantillon de catalogue.
       <strong>Ceci est une démo non commerciale.</strong>
     </div>
 
-    <div id="questions">
-      <div class="question">
-        <p>1. Pour quelle occasion ?</p>
-        <div class="options">
-          <button class="opt" data-group="occasion" data-value="cadeau">Cadeau</button>
-          <button class="opt" data-group="occasion" data-value="priere">Usage personnel / prière</button>
-          <button class="opt" data-group="occasion" data-value="maison">Maison / quotidien</button>
-          <button class="opt" data-group="occasion" data-value="gourmand">Plaisir gourmand</button>
+    <div class="mode-selector" id="modeSelector">
+      <button class="mode-btn" data-mode="form">
+        <i class="ti ti-list-check"></i>
+        Questionnaire guidé
+      </button>
+      <button class="mode-btn" data-mode="chat">
+        <i class="ti ti-message-circle"></i>
+        Discuter librement
+      </button>
+      <button class="mode-btn" data-mode="avatar">
+        <i class="ti ti-flame"></i>
+        Échange avec un avatar
+      </button>
+    </div>
+
+    <!-- FORM MODE -->
+    <div id="formPanel" style="display:none;">
+      <div id="questions">
+        <div class="question">
+          <p>1. Pour quelle occasion ?</p>
+          <div class="options">
+            <button class="opt" data-group="occasion" data-value="cadeau">Cadeau</button>
+            <button class="opt" data-group="occasion" data-value="priere">Usage personnel / prière</button>
+            <button class="opt" data-group="occasion" data-value="maison">Maison / quotidien</button>
+            <button class="opt" data-group="occasion" data-value="gourmand">Plaisir gourmand</button>
+          </div>
+        </div>
+
+        <div class="question">
+          <p>2. Quel type de produit ?</p>
+          <div class="options">
+            <button class="opt" data-group="type" data-value="epicerie">Épicerie / gourmand</button>
+            <button class="opt" data-group="type" data-value="bienetre">Bien-être / soins</button>
+            <button class="opt" data-group="type" data-value="priere">Objets de prière / art religieux</button>
+            <button class="opt" data-group="type" data-value="maison">Entretien maison</button>
+          </div>
+        </div>
+
+        <div class="question">
+          <p>3. Budget</p>
+          <div class="options">
+            <button class="opt" data-group="budget" data-value="petit">Moins de 15 €</button>
+            <button class="opt" data-group="budget" data-value="moyen">15 € à 40 €</button>
+            <button class="opt" data-group="budget" data-value="grand">Plus de 40 €</button>
+          </div>
+        </div>
+
+        <div class="question">
+          <p>4. Une sensibilité particulière ?</p>
+          <div class="options">
+            <button class="opt" data-group="sensibilite" data-value="naturel">Produits naturels / bio</button>
+            <button class="opt" data-group="sensibilite" data-value="tradition">Tradition / savoir-faire ancien</button>
+            <button class="opt" data-group="sensibilite" data-value="normandie">Origine Normandie</button>
+            <button class="opt" data-group="sensibilite" data-value="aucune">Pas de préférence</button>
+          </div>
+        </div>
+
+        <div class="question">
+          <p>5. Un mot sur le destinataire ou le contexte (facultatif)</p>
+          <input type="text" id="freeText" placeholder="ex : pour ma grand-mère, très croyante, qui aime jardiner" />
         </div>
       </div>
 
-      <div class="question">
-        <p>2. Quel type de produit ?</p>
-        <div class="options">
-          <button class="opt" data-group="type" data-value="epicerie">Épicerie / gourmand</button>
-          <button class="opt" data-group="type" data-value="bienetre">Bien-être / soins</button>
-          <button class="opt" data-group="type" data-value="priere">Objets de prière / art religieux</button>
-          <button class="opt" data-group="type" data-value="maison">Entretien maison</button>
-        </div>
-      </div>
+      <button id="submitBtn" disabled>
+        <i class="ti ti-wand"></i> Voir mes recommandations
+      </button>
+    </div>
 
-      <div class="question">
-        <p>3. Budget</p>
-        <div class="options">
-          <button class="opt" data-group="budget" data-value="petit">Moins de 15 €</button>
-          <button class="opt" data-group="budget" data-value="moyen">15 € à 40 €</button>
-          <button class="opt" data-group="budget" data-value="grand">Plus de 40 €</button>
-        </div>
-      </div>
-
-      <div class="question">
-        <p>4. Une sensibilité particulière ?</p>
-        <div class="options">
-          <button class="opt" data-group="sensibilite" data-value="naturel">Produits naturels / bio</button>
-          <button class="opt" data-group="sensibilite" data-value="tradition">Tradition / savoir-faire ancien</button>
-          <button class="opt" data-group="sensibilite" data-value="normandie">Origine Normandie</button>
-          <button class="opt" data-group="sensibilite" data-value="aucune">Pas de préférence</button>
-        </div>
-      </div>
-
-      <div class="question">
-        <p>5. Un mot sur le destinataire ou le contexte (facultatif)</p>
-        <input type="text" id="freeText" placeholder="ex : pour ma grand-mère, très croyante, qui aime jardiner" />
+    <!-- CHAT MODE -->
+    <div id="chatPanel">
+      <div id="chatLog"></div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="ex : je cherche un cadeau pour ma grand-mère, plutôt naturel, autour de 30 euros" />
+        <button id="chatSendBtn" aria-label="Envoyer"><i class="ti ti-send"></i></button>
       </div>
     </div>
 
-    <button id="submitBtn" disabled>
-      <i class="ti ti-wand"></i> Voir mes recommandations
-    </button>
+    <!-- AVATAR MODE -->
+    <div id="avatarPanel">
+      <div class="avatar-wrap">
+        <svg id="avatarSvg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="Avatar du conseiller">
+          <circle cx="48" cy="48" r="44" fill="var(--accent-bg)" stroke="var(--border-strong)" stroke-width="1"/>
+          <g class="avatar-breathe" id="avatarBreathe" style="transform-origin: 48px 48px;">
+            <path d="M48 24 C 56 36, 60 44, 48 56 C 36 44, 40 36, 48 24 Z" fill="var(--accent)" opacity="0.85" id="avatarFlame" class="avatar-flame"/>
+            <rect x="44" y="56" width="8" height="14" rx="2" fill="var(--accent)" opacity="0.6"/>
+          </g>
+        </svg>
+        <div class="avatar-status" id="avatarStatus">À votre écoute</div>
+      </div>
+
+      <label class="voice-toggle">
+        <input type="checkbox" id="voiceToggle" checked />
+        Lire les réponses à voix haute
+      </label>
+
+      <div id="avatarLog"></div>
+
+      <div class="chat-input-row">
+        <input type="text" id="avatarInput" placeholder="ex : je cherche un objet de prière pour quelqu'un qui aime la nature" />
+        <button id="avatarMicBtn" aria-label="Parler"><i class="ti ti-microphone"></i></button>
+        <button id="avatarSendBtn" aria-label="Envoyer"><i class="ti ti-send"></i></button>
+      </div>
+    </div>
 
     <div id="error"></div>
-    <div id="loading"><i class="ti ti-loader-2"></i> Le conseiller analyse le catalogue et rédige ses recommandations...</div>
+    <div id="loading"><i class="ti ti-loader-2"></i> Le conseiller analyse le catalogue...</div>
     <div id="results"></div>
 
     <footer>Démo technique — catalogue échantillon, sans lien avec une boutique réelle</footer>
   </div>
 
   <script>
+    // ---------- Mode selection ----------
+    document.querySelectorAll(".mode-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".mode-btn").forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+
+        const mode = btn.dataset.mode;
+        document.getElementById("formPanel").style.display = mode === "form" ? "block" : "none";
+        document.getElementById("chatPanel").style.display = mode === "chat" ? "flex" : "none";
+        document.getElementById("avatarPanel").style.display = mode === "avatar" ? "flex" : "none";
+        document.getElementById("results").style.display = "none";
+        document.getElementById("error").style.display = "none";
+
+        if (mode === "chat" && document.getElementById("chatLog").children.length === 0) {
+          addBubble("chatLog", "assistant", "Bonjour ! Dites-moi ce que vous recherchez (occasion, type de produit, budget, sensibilités...) et je vous proposerai des suggestions du catalogue.");
+        }
+
+        if (mode === "avatar" && document.getElementById("avatarLog").children.length === 0) {
+          const greeting = "Bonjour, je suis votre conseiller. Décrivez-moi ce que vous recherchez, à l'écrit ou à la voix, et je vous guiderai dans le catalogue.";
+          addBubble("avatarLog", "assistant", greeting);
+          speak(greeting);
+        }
+      });
+    });
+
+    // ---------- FORM MODE ----------
     const state = { occasion: null, type: null, budget: null, sensibilite: null };
 
     document.querySelectorAll(".opt").forEach((btn) => {
       btn.addEventListener("click", () => {
         const group = btn.dataset.group;
-        document.querySelectorAll('.opt[data-group="' + group + '"]').forEach((b) => {
-          b.classList.remove("selected");
-        });
+        document.querySelectorAll('.opt[data-group="' + group + '"]').forEach((b) => b.classList.remove("selected"));
         btn.classList.add("selected");
         state[group] = btn.dataset.value;
         checkReady();
@@ -284,19 +454,16 @@
     });
 
     function checkReady() {
-      const submitBtn = document.getElementById("submitBtn");
-      submitBtn.disabled = !Object.values(state).every((v) => v !== null);
+      document.getElementById("submitBtn").disabled = !Object.values(state).every((v) => v !== null);
     }
 
     document.getElementById("submitBtn").addEventListener("click", async () => {
-      const questions = document.getElementById("questions");
-      const submitBtn = document.getElementById("submitBtn");
       const loading = document.getElementById("loading");
       const error = document.getElementById("error");
       const results = document.getElementById("results");
 
-      questions.style.display = "none";
-      submitBtn.style.display = "none";
+      document.getElementById("formPanel").style.display = "none";
+      document.getElementById("modeSelector").style.display = "none";
       error.style.display = "none";
       results.style.display = "none";
       loading.style.display = "block";
@@ -307,7 +474,7 @@
         const response = await fetch("/api/recommend", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...state, freeText }),
+          body: JSON.stringify(Object.assign({ mode: "form" }, state, { freeText: freeText })),
         });
 
         if (!response.ok) {
@@ -316,25 +483,190 @@
         }
 
         const data = await response.json();
-        renderResults(data.recommandations || []);
         loading.style.display = "none";
+        renderResults(data.recommandations || [], "Voici les recommandations du conseiller IA :");
         results.style.display = "flex";
       } catch (err) {
         loading.style.display = "none";
         error.style.display = "block";
         error.textContent = "Une erreur est survenue : " + err.message;
-        submitBtn.style.display = "block";
+        document.getElementById("formPanel").style.display = "block";
+        document.getElementById("modeSelector").style.display = "grid";
       }
     });
 
-    function renderResults(recos) {
+    // ---------- CHAT MODE ----------
+    const chatHistory = [];
+
+    function addBubble(logId, role, text) {
+      const log = document.getElementById(logId);
+      const bubble = document.createElement("div");
+      bubble.className = "bubble " + role;
+      bubble.textContent = text;
+      log.appendChild(bubble);
+    }
+
+    document.getElementById("chatSendBtn").addEventListener("click", () => sendMessage("chat"));
+    document.getElementById("chatInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage("chat");
+    });
+
+    // ---------- AVATAR MODE ----------
+    const avatarHistory = [];
+
+    document.getElementById("avatarSendBtn").addEventListener("click", () => sendMessage("avatar"));
+    document.getElementById("avatarInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage("avatar");
+    });
+
+    // Speech synthesis (text-to-speech)
+    function speak(text) {
+      const voiceToggle = document.getElementById("voiceToggle");
+      if (!voiceToggle || !voiceToggle.checked) return;
+      if (!("speechSynthesis" in window)) return;
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "fr-FR";
+      utterance.rate = 0.95;
+
+      const breathe = document.getElementById("avatarBreathe");
+      const flame = document.getElementById("avatarFlame");
+      const status = document.getElementById("avatarStatus");
+
+      utterance.onstart = () => {
+        if (breathe) breathe.classList.add("speaking");
+        if (flame) flame.classList.add("speaking");
+        if (status) status.textContent = "Le conseiller parle...";
+      };
+      utterance.onend = () => {
+        if (breathe) breathe.classList.remove("speaking");
+        if (flame) flame.classList.remove("speaking");
+        if (status) status.textContent = "À votre écoute";
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Speech recognition (speech-to-text)
+    let recognition = null;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = "fr-FR";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+    }
+
+    const micBtn = document.getElementById("avatarMicBtn");
+    if (!SpeechRecognition) {
+      micBtn.disabled = true;
+      micBtn.title = "Reconnaissance vocale non disponible sur ce navigateur";
+    } else {
+      let listening = false;
+      micBtn.addEventListener("click", () => {
+        if (listening) {
+          recognition.stop();
+          return;
+        }
+        document.getElementById("avatarStatus").textContent = "Je vous écoute...";
+        micBtn.classList.add("mic-active");
+        listening = true;
+        recognition.start();
+      });
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById("avatarInput").value = transcript;
+      };
+      recognition.onerror = () => {
+        document.getElementById("avatarStatus").textContent = "À votre écoute";
+      };
+      recognition.onend = () => {
+        listening = false;
+        micBtn.classList.remove("mic-active");
+        document.getElementById("avatarStatus").textContent = "À votre écoute";
+        const val = document.getElementById("avatarInput").value.trim();
+        if (val) sendMessage("avatar");
+      };
+    }
+
+    // ---------- Shared send logic ----------
+    async function sendMessage(mode) {
+      const isAvatar = mode === "avatar";
+      const inputEl = document.getElementById(isAvatar ? "avatarInput" : "chatInput");
+      const sendBtn = document.getElementById(isAvatar ? "avatarSendBtn" : "chatSendBtn");
+      const logId = isAvatar ? "avatarLog" : "chatLog";
+      const history = isAvatar ? avatarHistory : chatHistory;
+
+      const message = inputEl.value.trim();
+      if (!message) return;
+
+      const loading = document.getElementById("loading");
+      const error = document.getElementById("error");
+      const results = document.getElementById("results");
+
+      addBubble(logId, "user", message);
+      history.push({ role: "user", content: message });
+      inputEl.value = "";
+      inputEl.disabled = true;
+      sendBtn.disabled = true;
+      error.style.display = "none";
+      results.style.display = "none";
+      loading.style.display = "block";
+
+      if (isAvatar) document.getElementById("avatarStatus").textContent = "Le conseiller réfléchit...";
+
+      try {
+        const response = await fetch("/api/recommend", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mode: "chat", message: message, history: history.slice(0, -1) }),
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || "Erreur lors de la requête");
+        }
+
+        const data = await response.json();
+        loading.style.display = "none";
+
+        if (data.type === "question") {
+          addBubble(logId, "assistant", data.message);
+          history.push({ role: "assistant", content: data.message });
+          if (isAvatar) speak(data.message);
+        } else {
+          const introMsg = data.message || "Voici mes recommandations :";
+          addBubble(logId, "assistant", introMsg);
+          history.push({ role: "assistant", content: introMsg });
+          if (isAvatar) speak(introMsg);
+          renderResults(data.recommandations || [], "");
+          results.style.display = "flex";
+        }
+      } catch (err) {
+        loading.style.display = "none";
+        error.style.display = "block";
+        error.textContent = "Une erreur est survenue : " + err.message;
+        if (isAvatar) document.getElementById("avatarStatus").textContent = "À votre écoute";
+      } finally {
+        inputEl.disabled = false;
+        sendBtn.disabled = false;
+        inputEl.focus();
+      }
+    }
+
+    // ---------- Shared rendering ----------
+    function renderResults(recos, introText) {
       const results = document.getElementById("results");
       results.innerHTML = "";
 
-      const intro = document.createElement("p");
-      intro.className = "results-intro";
-      intro.textContent = "Voici les recommandations du conseiller IA :";
-      results.appendChild(intro);
+      if (introText) {
+        const intro = document.createElement("p");
+        intro.className = "results-intro";
+        intro.textContent = introText;
+        results.appendChild(intro);
+      }
 
       recos.forEach((p) => {
         const card = document.createElement("div");
@@ -349,11 +681,13 @@
         results.appendChild(card);
       });
 
-      const restart = document.createElement("button");
-      restart.id = "restartBtn";
-      restart.innerHTML = '<i class="ti ti-refresh"></i> Refaire une recherche';
-      restart.addEventListener("click", () => window.location.reload());
-      results.appendChild(restart);
+      if (recos.length > 0) {
+        const restart = document.createElement("button");
+        restart.id = "restartBtn";
+        restart.innerHTML = '<i class="ti ti-refresh"></i> Refaire une recherche';
+        restart.addEventListener("click", () => window.location.reload());
+        results.appendChild(restart);
+      }
     }
 
     function escapeHtml(str) {
